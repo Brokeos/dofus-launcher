@@ -1,0 +1,18 @@
+HTTP/1.1 206 Partial Content
+Date: Thu, 15 Oct 2026 07:14:21 GMT
+Content-Type: multipart/byteranges; boundary=00000000003734884208
+Content-Length: 8114
+Connection: keep-alive
+Last-Modified: Tue, 06 Oct 2026 13:55:42 GMT
+ETag: "4d3f4b13aa233d78c3939ff8cfe92f0a"
+x-amz-server-side-encryption: AES256
+Via: 1.1 1feab8d6a8e5cc920c359b62fd33d3de.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: FRA56-P8
+X-Amz-Cf-Id: xD73KEfbluSJgx_NlBr2ZnKPK4r7wJ5_zxpP9FtXWZU8_7IluxS3Cg==
+X-77-NZT: krS6+QjGb8SK3GaWJL8oX+FKoa+dIqB4GTsGpkNmF7PybzQkmqC5LG4
+X-77-NZT-Ray: 658e3825108b6ca6727dd06acaa6bd28
+X-77-Cache: HIT
+X-77-Age: 753503
+Server: CDN77-Turbo
+X-77-POP: parisFR
+

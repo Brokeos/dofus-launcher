@@ -15,8 +15,8 @@ const DOFUS_SERVER_TAG: &str = "dofus2";
 pub struct NewsItem {
     pub id: i64,
     pub title: String,
+    /// ISO 8601 UTC date derived from the CMS timestamp.
     pub date: String,
-    pub timestamp: i64,
     pub url: String,
     pub image: Option<String>,
 }
@@ -27,14 +27,13 @@ pub struct ServerStatus {
     pub name: String,
     /// "Up", "Down", "Maintenance"… as reported by Ankama.
     pub status: String,
+    pub tags: Vec<String>,
 }
 
 #[derive(Deserialize)]
 struct RawNews {
     id: i64,
     name: String,
-    #[serde(default)]
-    date: String,
     #[serde(default)]
     timestamp: i64,
     canonical_url: Option<String>,
@@ -93,8 +92,7 @@ pub async fn news(lang: &str, count: u32) -> anyhow::Result<Vec<NewsItem>> {
         .map(|n| NewsItem {
             id: n.id,
             title: n.name,
-            date: n.date,
-            timestamp: n.timestamp,
+            date: iso_utc(n.timestamp),
             url: n.canonical_url.or(n.url).unwrap_or_default(),
             image: n.image_url,
         })
@@ -126,13 +124,35 @@ pub async fn server_status(lang: &str) -> anyhow::Result<Vec<ServerStatus>> {
         .map(|s| ServerStatus {
             name: s.names.get(lang).or_else(|| s.names.get("fr")).cloned().unwrap_or_default(),
             status: s.status,
+            tags: s.tags,
         })
         .collect())
+}
+
+/// Unix seconds → `YYYY-MM-DDTHH:MM:SSZ` (civil-from-days, Howard Hinnant).
+fn iso_utc(ts: i64) -> String {
+    let (days, secs) = (ts.div_euclid(86_400), ts.rem_euclid(86_400));
+    let z = days + 719_468;
+    let era = z.div_euclid(146_097);
+    let doe = z.rem_euclid(146_097);
+    let yoe = (doe - doe / 1460 + doe / 36_524 - doe / 146_096) / 365;
+    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
+    let mp = (5 * doy + 2) / 153;
+    let d = doy - (153 * mp + 2) / 5 + 1;
+    let m = if mp < 10 { mp + 3 } else { mp - 9 };
+    let y = yoe + era * 400 + i64::from(m <= 2);
+    format!("{y:04}-{m:02}-{d:02}T{:02}:{:02}:{:02}Z", secs / 3600, secs % 3600 / 60, secs % 60)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn iso_dates() {
+        assert_eq!(iso_utc(0), "1970-01-01T00:00:00Z");
+        assert_eq!(iso_utc(1_791_968_400), "2026-10-14T09:00:00Z");
+    }
 
     #[tokio::test]
     #[ignore = "network"]
