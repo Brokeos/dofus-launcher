@@ -28,3 +28,7 @@ npx tauri build        # installeur NSIS dans target/release/bundle/nsis
 Données du launcher : `%APPDATA%\dofus-launcher` (réglages, comptes, logs). Jeu : `%LOCALAPPDATA%\Ankama\Dofus-dofus3` par défaut.
 Le dossier d'installation reste compatible avec l'Ankama Launcher officiel (`manifest.json`, `.release.infos.json`).
 Ne lancez pas les deux launchers en même temps : ils utilisent tous les deux le port 26116.
+
+## Mentions légales
+
+Projet indépendant, non affilié à Ankama. Les specs de `docs/` viennent d'une rétro-ingénierie statique (avec rea) faite pour l'interopérabilité. Les images Dofus restent la propriété d'Ankama. Détails dans [LEGAL.md](LEGAL.md).
