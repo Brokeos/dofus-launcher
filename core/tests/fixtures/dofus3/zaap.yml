@@ -1,0 +1,174 @@
+{% extends "zaap-" + os.platform + ".yml" %}
+
+{% block arguments %}
+  - "--port"
+  - "{{ env.ZAAP_PORT }}"
+  - "--gameName"
+  - "{{ env.ZAAP_GAME }}"
+  - "--gameRelease"
+  - "{{ env.ZAAP_RELEASE }}"
+  - "--instanceId"
+  - "{{ env.ZAAP_INSTANCE_ID }}"
+  - "--hash"
+  - "{{ env.ZAAP_HASH }}"
+  - "--canLogin"
+  - "{{ env.ZAAP_CAN_AUTH }}"
+  - "--langCode"
+  - "{{ game.settings.language }}"
+  - "--autoConnectType"
+  - "{{ game.settings.autoConnectType }}"
+  - "--connectionPort"
+  - "{{ game.settings.connectionPort }}"
+{% if game.settings.hdReady %}
+  - "--hdReady"
+{% endif %}
+{% if game.settings.4kReady %}
+  - "--4kReady"
+{% endif %}
+{% endblock arguments %}
+
+{% block fragments %}
+  - "bones"
+  - "skins"
+  - "audio"
+  - "data"
+  - "i18n"
+  - "picto"
+  - "map_common"
+{% if game.settings.hdReady %}
+  - "map_textures_2x"
+{% endif %}
+{% if game.settings.4kReady %}
+  - "map_textures_4x"
+{% endif %}
+  - "start-script"
+{% endblock fragments %}
+
+{% block settings %}
+  - name: "language"
+    default: "{{ zaap.LANGUAGE }}"
+    label: 
+      fr: "Langue"
+      en: "Language"
+      de: "Sprache"
+      es: "Lengua"
+      pt: "Idioma"
+    description:
+      fr: "Langue utilisée dans le jeu Dofus"
+      en: "Language used in the game Dofus"
+      de: "Verwendete Sprache im Spiel Dofus"
+      es: "Idioma utilizado en el juego Dofus"
+      pt: "Idioma utilizado no jogo Dofus"
+    type: select
+    options: 
+      - label: "Francais"
+        value: "fr"
+
+      - label: "English"
+        value: "en"
+
+      - label: "Deutsch"
+        value: "de"
+
+      - label: "Español"
+        value: "es"
+
+      - label: "Português"
+        value: "pt"
+  - name: "autoConnectType"
+    default: 1
+    label:
+      en: "Connection"
+      fr: "Connexion"
+      de: "Verbindungsaufbau"
+      es: "Conexión"
+      pt: "Conexão"
+    description:
+      en: "Log in directly ..."
+      fr: "Se connecter directement ..."
+      de: "Sich direkt einloggen ..."
+      es: "Conectarse directamente ..."
+      pt: "Conectar-se diretamente ..."
+    type: select
+    options: 
+      - label:
+          en: "... to server choice"
+          fr: "... au choix de serveur"
+          de: "... in die Serverwahl"
+          es: "... a la elección de servidor"
+          pt: "... à escolha do servidor"
+        value: 0
+        
+      - label:
+          en: "... to character choice"
+          fr: "... au choix de personnage"
+          de: "... in die Charakterwahl"
+          es: "... a la elección de personaje"
+          pt: "... à escolha do personagem"
+        value: 1
+        
+      - label:
+          en: "... to the game"
+          fr: "... au jeu"
+          de: "... in das Spiel"
+          es: "... al juego"
+          pt: "... ao jogo"
+        value: 2
+  - name: "connectionPort"
+    default: "5555"
+    label:
+      en: "Connection port"
+      fr: "Port de connexion"
+      de: "Einwahlport"
+      es: "Puerto de conexión"
+      pt: "Porta de conexão"
+    type: select
+    options:
+      - label:
+          en: "5555"
+          fr: "5555"
+          de: "5555"
+          es: "5555"
+          pt: "5555"
+        value: "5555"
+
+      - label:
+          en: "443"
+          fr: "443"
+          de: "443"
+          es: "443"
+          pt: "443"
+        value: "443"
+{% endblock settings %}
+{% block quality %}
+  - name: "hdReady"
+    default: false
+    label:
+      en: "Download the DOFUS HD Pack (Experimental)"
+      fr: "Télécharger Dofus HD Pack (Experimental)"
+      de: "Download the DOFUS HD Pack (Experimental)"
+      es: "Descargar Pack Dofus HD (Experimental)"
+      pt: "Baixar Dofus HD Pack (Experimental)"
+    description:
+      en: "Download a pack of additional HD textures for maps. Appropriate for mid-range configurations, preferably with a Full HD screen."
+      fr: "Télécharge un pack de textures HD additionnel pour les maps, convient pour les configurations de milieu de gamme, avec de préférence un écran Full HD."
+      de: "Download a pack of additional HD textures for maps. Appropriate for mid-range configurations, preferably with a Full HD screen."
+      es: "Descarga un pack de texturas HD adicional para los mapas, conviene para las configuraciones de gama media, con una pantalla Full HD preferentemente."
+      pt: "Baixe um pacote de texturas HD adicional para os mapas, conveniente para configurações médias, de preferência em uma tela Full HD."
+    type: checkbox
+  - name: "4kReady"
+    default: false
+    label:
+      en: "Download the DOFUS 4K Pack (Experimental)"
+      fr: "Télécharger Dofus 4K Pack (Experimental)"
+      de: "Download the DOFUS 4K Pack (Experimental)"
+      es: "Descargar Pack Dofus 4K (Experimental)"
+      pt: "Baixar Dofus 4K Pack (Experimental)"
+    description:
+      en: "Download a pack of additional 4K textures for maps. Appropriate for the latest configurations, preferably with a 4K screen."
+      fr: "Télécharge un pack de textures 4K additionnel pour les maps, convient pour les configurations dernière génération, avec de préférence un écran 4K."
+      de: "Download a pack of additional 4K textures for maps. Appropriate for the latest configurations, preferably with a 4K screen."
+      es: "Descarga un pack de texturas 4K adicional para los mapas, conviene para las configuraciones de última generación, con una pantalla 4K preferentemente."
+      pt: "Baixe um pacote de texturas 4K adicional para os mapas, conveniente para configurações de última geração, de preferência em uma tela 4K."
+    type: checkbox
+{% endblock quality %}

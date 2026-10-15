@@ -1,0 +1,44 @@
+maxInstances: true
+
+arguments:
+{% block arguments %}{% endblock arguments %}
+  - "{{ game.settings.directxVersion }}"
+  
+fragments:
+  - "win32_x64"
+  - "start-script"
+{% block fragments %}{% endblock fragments %}
+
+settings:
+  {% block settings %}{% endblock settings %}
+  - name: "directxVersion"
+    default: ""
+    label:
+      en: "DirectX Version"
+      fr: "Version de DirectX"
+      de: "DirectX-Version"
+      es: "Versión de DirectX"
+      pt: "Versão do DirectX"
+    type: select
+    description:
+      en: "DirectX 12 may not be compatible on some older machines or those equipped with graphics cards that do not fully support the latest technologies. If you experience crashes at startup or graphical issues, you may need to switch back to DirectX 11."
+      fr: "Sur certaines machines plus anciennes ou équipées d'une carte graphique ne prenant pas pleinement en charge les dernières technologies, DirectX 12 peut ne pas être compatible. Si vous rencontrez des plantages au démarrage ou des problèmes graphiques, il peut être nécessaire de revenir à DirectX 11."
+      de: "Auf einigen älteren Computern oder Computern, die eine veraltete Grafikkarte nutzen, ist DirectX 12 möglicherweise nicht kompatibel. Falls beim Start Abstürze oder Grafikprobleme auftreten, ist es möglicherweise erforderlich, wieder auf die Vorgängerversion (Direct X 11) umzusteigen."
+      es: "DirectX 12 puede no ser compatible en algunos equipos más antiguos o en aquellos con tarjetas gráficas que no admiten completamente las tecnologías más recientes. Si experimentas bloqueos al iniciar o problemas gráficos, puede que necesites volver a DirectX 11."
+      pt: "Em computadores mais antigos ou equipados com uma placa de vídeo que não utiliza as tecnologias mais recentes, o DirectX 12 pode não ser compatível. Caso encontre travamentos na inicialização ou problemas gráficos, pode ser necessário voltar para o DirectX 11."
+    options:
+      - label:
+          en: "DirectX 12"
+          fr: "DirectX 12"
+          de: "DirectX 12"
+          es: "DirectX 12"
+          pt: "DirectX 12"
+        value: ""
+      - label:
+          en: "DirectX 11"
+          fr: "DirectX 11"
+          de: "DirectX 11"
+          es: "DirectX 11"
+          pt: "DirectX 11"
+        value: "-force-d3d11"
+{% block quality %}{% endblock quality %}
