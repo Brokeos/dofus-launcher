@@ -2,6 +2,7 @@
   import { api, type AccountInfo } from '$lib/api';
   import { accountName } from '$lib/format';
   import { store } from '$lib/store.svelte';
+  import { CLASSES, accountHead, head, symbol } from '$lib/sprites';
 
   interface Props {
     onadd: () => void;
@@ -22,7 +23,7 @@
 
 <section class="panel accounts" aria-labelledby="acc-title">
   <div class="panel-head">
-    <h2 id="acc-title">Comptes</h2>
+    <h2 id="acc-title"><img src={symbol(6)} alt="" width="18" height="18" />Comptes</h2>
     <button class="btn small primary" onclick={onadd}>+ Ajouter un compte</button>
   </div>
 
@@ -37,6 +38,7 @@
             onchange={(e) => store.run(() => api.accountSetActive(a.id, e.currentTarget.checked))}
           />
         </label>
+        <img class="avatar" src={accountHead(a.id)} alt="" width="38" height="38" />
         <div class="who">
           <div class="nick">
             <span>{a.nickname ?? a.login}</span>{#if a.tag}<span class="tag">#{a.tag}</span>{/if}
@@ -75,6 +77,9 @@
       </li>
     {:else}
       <li class="empty-li">
+        <div class="heads" aria-hidden="true">
+          {#each CLASSES.slice(0, 7) as c, i (c.id)}<img src={head(c.id, i % 2 === 1)} alt="" width="40" height="42" />{/each}
+        </div>
         <p class="empty">Aucun compte. Ajoutez votre compte Ankama pour jouer.</p>
       </li>
     {/each}
@@ -112,7 +117,31 @@
   li.empty-li {
     background: none;
     border: none;
+    flex-direction: column;
     justify-content: center;
+    gap: 0;
+  }
+  .heads {
+    display: flex;
+    margin-top: 10px;
+  }
+  .heads img {
+    margin: 0 -5px;
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.6));
+  }
+  .heads img:nth-child(odd) {
+    transform: translateY(4px);
+  }
+  .avatar {
+    flex: none;
+    border-radius: 50%;
+    object-fit: cover;
+    background: radial-gradient(circle at 50% 35%, #3a4a26, var(--bg));
+    border: 1px solid var(--border);
+  }
+  li.inactive .avatar {
+    filter: grayscale(0.8);
+    opacity: 0.6;
   }
   .toggle {
     display: flex;

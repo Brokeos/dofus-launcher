@@ -2,6 +2,7 @@
   import { api } from '$lib/api';
   import { accountName } from '$lib/format';
   import { store } from '$lib/store.svelte';
+  import { accountHead, asset } from '$lib/sprites';
 
   interface Props {
     onsettings: () => void;
@@ -36,10 +37,7 @@
 
 <header>
   <div class="brand">
-    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 2c4 3 7 6.5 7 11a7 7 0 0 1-14 0c0-4.5 3-8 7-11z" fill="#4c6e1a" />
-      <path d="M12 6c2.3 2 4 4.4 4 7.2a4 4 0 0 1-8 0C8 10.4 9.7 8 12 6z" fill="#a6da29" />
-    </svg>
+    <img class="egg" src={asset.egg} alt="" width="28" height="28" />
     <h1>Dofus Launcher</h1>
   </div>
 
@@ -74,6 +72,7 @@
                   onchange={(e) =>
                     store.run(() => api.accountSetActive(a.id, e.currentTarget.checked))}
                 />
+                <img class="avatar" src={accountHead(a.id)} alt="" width="22" height="22" />
                 <span class="name">{accountName(a)}</span>
               </label>
               {#if a.isMain}
@@ -124,6 +123,14 @@
     display: flex;
     align-items: center;
     gap: 9px;
+  }
+  .egg {
+    filter: drop-shadow(0 0 6px rgba(166, 218, 41, 0.35));
+  }
+  .avatar {
+    border-radius: 50%;
+    background: var(--bg-2);
+    object-fit: cover;
   }
   h1 {
     font-size: 16px;

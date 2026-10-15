@@ -2,6 +2,7 @@
   import { api } from '$lib/api';
   import { formatBytes, formatEta, formatSpeed, phaseLabel } from '$lib/format';
   import { store } from '$lib/store.svelte';
+  import { asset } from '$lib/sprites';
 
   const s = $derived(store.state);
   const release = $derived(s?.release);
@@ -115,10 +116,12 @@
   );
 </script>
 
-<section class="panel hero" aria-labelledby="play-title">
+<section class="panel hero" aria-labelledby="play-title" style:--hero={`url(${asset.hero})`}>
   <div class="top">
     <div>
-      <h2 id="play-title">DOFUS <span class="lime">3</span></h2>
+      <h2 id="play-title" class="title">
+        <img src={asset.logo} alt="Dofus" width="150" height="96" /><span class="lime">3</span>
+      </h2>
       <dl class="versions">
         <div>
           <dt>Installée</dt>
@@ -235,9 +238,11 @@
 
 <style>
   .hero {
-    padding: 18px 20px;
+    padding: 14px 20px 18px;
     background:
-      linear-gradient(120deg, rgba(76, 110, 26, 0.28), transparent 55%),
+      linear-gradient(90deg, rgba(18, 21, 15, 0.97) 0%, rgba(18, 21, 15, 0.86) 42%, rgba(18, 21, 15, 0.35) 75%, rgba(18, 21, 15, 0.55) 100%),
+      linear-gradient(0deg, rgba(18, 21, 15, 0.9) 0%, transparent 45%),
+      var(--hero) 62% 28% / cover no-repeat,
       var(--panel);
   }
   .top {
@@ -246,10 +251,23 @@
     align-items: flex-start;
     gap: 12px;
   }
-  h2 {
-    font-size: 26px;
+  .title {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    margin: -6px 0 -4px -8px;
+  }
+  .title img {
+    width: 150px;
+    height: auto;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.6));
+  }
+  .title span {
+    font-size: 34px;
     font-weight: 800;
-    letter-spacing: 0.04em;
+    line-height: 1;
+    margin-bottom: 18px;
+    text-shadow: 0 0 14px rgba(166, 218, 41, 0.55), 0 2px 4px rgba(0, 0, 0, 0.8);
   }
   .lime {
     color: var(--lime);

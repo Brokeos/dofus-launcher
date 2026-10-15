@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { asset, symbol } from '$lib/sprites';
   import { api, errorMessage } from '$lib/api';
   import { accountName } from '$lib/format';
   import { store } from '$lib/store.svelte';
@@ -101,7 +102,7 @@
 <Modal {open} title="Ajouter un compte Ankama" onclose={cancel}>
   {#if step.kind === 'waiting' || step.kind === 'idle'}
     <div class="center" role="status" aria-live="polite">
-      <div class="spinner" aria-hidden="true"></div>
+      <img class="egg" src={asset.egg} alt="" width="64" height="64" />
       <p><strong>Connexion dans votre navigateur…</strong></p>
       <p class="muted">
         Une page de connexion Ankama s'est ouverte. Identifiez-vous puis revenez ici : le compte sera ajouté
@@ -111,8 +112,9 @@
     </div>
   {:else if step.kind === 'shield'}
     <form onsubmit={validate}>
-      <p>
-        <strong>Ankama Shield</strong> — cet appareil doit être autorisé.
+      <p class="shield">
+        <img src={symbol(1)} alt="" width="32" height="32" />
+        <span><strong>Ankama Shield</strong> — cet appareil doit être autorisé.</span>
       </p>
       <p class="muted">
         {#if step.otp}
@@ -202,18 +204,16 @@
   .between {
     justify-content: space-between;
   }
-  .spinner {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: 3px solid var(--border);
-    border-top-color: var(--lime);
-    animation: spin 0.9s linear infinite;
-    margin-bottom: 6px;
+  .egg {
+    animation: pulse 1.6s ease-in-out infinite;
   }
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
+  @keyframes pulse {
+    0%, 100% { transform: scale(0.94); filter: drop-shadow(0 0 4px rgba(166, 218, 41, 0.25)); }
+    50% { transform: scale(1.04); filter: drop-shadow(0 0 14px rgba(166, 218, 41, 0.6)); }
+  }
+  .shield {
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 </style>

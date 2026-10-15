@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { symbol } from '$lib/sprites';
   import { api, errorMessage, type ServerStatus, type ServerStatusKind } from '$lib/api';
   import { onMount } from 'svelte';
 
@@ -29,7 +30,7 @@
 
 <section class="panel servers" aria-labelledby="srv-title" aria-busy={loading}>
   <div class="panel-head">
-    <h2 id="srv-title">Serveurs</h2>
+    <h2 id="srv-title"><img src={symbol(16)} alt="" width="18" height="18" />Serveurs</h2>
     <button class="btn ghost icon" aria-label="Actualiser l'état des serveurs" title="Actualiser" disabled={loading} onclick={load}>
       <svg width="15" height="15" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"
         ><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7" /></svg
