@@ -455,3 +455,15 @@ L97080-98440.
    present locally.
 6. Whether CreateToken without a certificate (empty `certificate_*` params) is accepted for accounts that have Shield
    enabled. See the auth doc.
+
+---
+
+## 6. Confirmed against the real game (2026-10-15, Dofus 3 `6.0_3.7.10.10`)
+
+Observed with the replacement launcher (logs, method names only):
+
+1. Game spawned through `zaap-start.bat` (cmd.exe), real `Dofus.exe` found as child.
+2. Dofus connects to the **Thrift** port 26116 ~6 s after spawn (the text socket 26117 is not used).
+3. Call order: `connect` → `settings_get` → `userInfo_get` → `auth_getGameToken(gameId = 1)` → `updater_isUpdateAvailable`.
+4. The token from `Account/CreateToken?game=1` is accepted: the game logs in.
+   `hasPremiumAccess`, `hasGameAccess` and the `*WithWindowId` variant were not called.
