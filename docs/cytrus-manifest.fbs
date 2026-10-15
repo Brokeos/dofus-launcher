@@ -1,0 +1,48 @@
+// Cytrus v6 manifest schema (Ankama Launcher / @Zaap/cytrus-client 0.1.6).
+// Reconstructed from the generated FlatBuffers TS accessors bundled in
+// re/pretty/main.js (Chunk L41359-41445, Bundle L69470-69562, File L69567-69693,
+// Fragment L69698-69792, Manifest L142643-142705) and verified by parsing
+// public CDN samples (re/samples/*.config, re/samples/manifest-head/*.json).
+//
+// Applies to BOTH  {game}/releases/{release}/{platform}/{version}.manifest
+//            and   {game}/releases/{release}/{platform}/{version}.config
+// (the .config is a Manifest containing only the "configuration" fragment).
+// No file_identifier, no size prefix; root offset is the first uint32.
+// Hashes are raw 20-byte SHA-1 digests stored as [byte] (signed int8 in the
+// generated code; the launcher converts via Uint8Array -> lowercase hex).
+
+namespace Cytrus;
+
+table Chunk {
+  hash:[byte];      // slot 0: SHA-1 of the chunk bytes (raw, uncompressed)
+  size:long;        // slot 1
+  offset:long;      // slot 2: offset inside the File (File.chunks) or
+                    //         inside the Bundle blob (Bundle.chunks)
+}
+
+table File {
+  name:string;      // slot 0: relative path, '/' separators
+  size:long;        // slot 1
+  hash:[byte];      // slot 2: SHA-1 of the whole file
+  chunks:[Chunk];   // slot 3: empty => the file is one chunk {hash,0,size}
+  executable:bool;  // slot 4: chmod 0o744 vs 0o644 (POSIX only in practice)
+  symlink:string;   // slot 5: link target relative to install root
+}
+
+table Bundle {
+  hash:[byte];      // slot 0: observed = SHA-1(concat(raw chunk hashes)) ;
+                    //         NOT the SHA-1 of the blob content
+  chunks:[Chunk];   // slot 1: offsets are positions inside the bundle blob
+}
+
+table Fragment {
+  name:string;      // slot 0: e.g. "configuration", "win32_x64", "bones"
+  files:[File];     // slot 1
+  bundles:[Bundle]; // slot 2
+}
+
+table Manifest {
+  fragments:[Fragment]; // slot 0
+}
+
+root_type Manifest;

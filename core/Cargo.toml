@@ -1,0 +1,38 @@
+[package]
+name = "dofus_core"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+aes = "0.9.3"
+anyhow = "1.0.104"
+base64 = "0.23.1"
+bytes = "1.12.1"
+cbc = "0.2.1"
+dirs = "7.0.0"
+ecb = "0.2.1"
+fs4 = "1.1.0"
+futures = "0.3.34"
+hex = "0.4.3"
+md-5 = "0.11.0"
+minijinja = "3.0.0"
+rand = "0.10.3"
+reqwest = { version = "0.13.5", default-features = false, features = ["rustls", "json", "stream", "gzip", "http2", "form", "query"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+serde_yaml_ng = "0.10.0"
+sha1 = "0.11.0"
+sha2 = "0.11.1"
+sysinfo = "0.39.6"
+thiserror = "2.0.21"
+tokio = { version = "1.53.3", features = ["full"] }
+tokio-util = "0.7.20"
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
+url = "2.5.8"
+uuid = { version = "1.28.0", features = ["v4"] }
+windows = { version = "0.62.2", features = ["Win32_Security_Cryptography", "Win32_Foundation", "Win32_System_Memory"] }
+winreg = "0.56.0"
+
+[dev-dependencies]
+tempfile = "3.27.0"
