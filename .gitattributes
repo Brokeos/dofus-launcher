@@ -1,0 +1,6 @@
+*.bin binary
+*.head256k binary
+*.manifest binary
+*.config binary
+*.meta binary
+*.txt -text
