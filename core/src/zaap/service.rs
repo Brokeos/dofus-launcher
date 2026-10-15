@@ -144,6 +144,8 @@ impl Service {
     /// Dispatch by method name. `None` = unknown method.
     pub async fn call(&self, name: &str, args: &TStruct) -> Option<Outcome> {
         method_params(name)?;
+        // Method name only: arguments carry the session hash and replies carry tokens.
+        tracing::debug!(method = name, "zaap call");
         let out = match self.handle(name, args).await {
             Ok(o) | Err(o) => o,
         };
