@@ -4,3 +4,4 @@ node_modules/
 app/build/
 app/.svelte-kit/
 *.log
+work/

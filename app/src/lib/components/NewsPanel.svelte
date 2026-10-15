@@ -48,7 +48,7 @@
         <li>
           <button class="card" onclick={() => open(n.url)} title={n.title}>
             <div class="img">
-              {#if n.image}<img src={n.image} alt="" loading="lazy" decoding="async" />{/if}
+              {#if n.image}<img src={n.image} alt="" referrerpolicy="no-referrer" loading="lazy" decoding="async" />{/if}
             </div>
             <div class="txt">
               <span class="title">{n.title}</span>
