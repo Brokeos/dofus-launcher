@@ -2,7 +2,8 @@
   import { api, type AccountInfo } from '$lib/api';
   import { accountName } from '$lib/format';
   import { store } from '$lib/store.svelte';
-  import { CLASSES, accountHead, head, symbol } from '$lib/sprites';
+  import { CLASSES, accountAvatar, head, symbol } from '$lib/sprites';
+  import AvatarPicker from './AvatarPicker.svelte';
 
   interface Props {
     onadd: () => void;
@@ -11,6 +12,8 @@
 
   const accounts = $derived(store.state?.accounts ?? []);
   let busy = $state<number | null>(null);
+  let picking = $state<AccountInfo | null>(null);
+  const avatars = $derived(store.state?.settings.avatars);
 
   async function logout(a: AccountInfo) {
     if (!confirm(`Déconnecter le compte ${accountName(a)} ?`)) return;
@@ -38,7 +41,14 @@
             onchange={(e) => store.run(() => api.accountSetActive(a.id, e.currentTarget.checked))}
           />
         </label>
-        <img class="avatar" src={accountHead(a.id)} alt="" width="38" height="38" />
+        <button
+          class="avatar-btn"
+          title="Choisir la classe"
+          aria-label={`Choisir la classe de ${accountName(a)}`}
+          onclick={() => (picking = a)}
+        >
+          <img class="avatar" src={accountAvatar(a.id, avatars)} alt="" width="38" height="38" />
+        </button>
         <div class="who">
           <div class="nick">
             <span>{a.nickname ?? a.login}</span>{#if a.tag}<span class="tag">#{a.tag}</span>{/if}
@@ -86,6 +96,8 @@
   </ul>
 </section>
 
+<AvatarPicker account={picking} onclose={() => (picking = null)} />
+
 <style>
   .accounts {
     display: flex;
@@ -131,6 +143,17 @@
   }
   .heads img:nth-child(odd) {
     transform: translateY(4px);
+  }
+  .avatar-btn {
+    flex: none;
+    padding: 0;
+    border: none;
+    background: none;
+    border-radius: 50%;
+    line-height: 0;
+  }
+  .avatar-btn:hover .avatar {
+    border-color: var(--lime);
   }
   .avatar {
     flex: none;

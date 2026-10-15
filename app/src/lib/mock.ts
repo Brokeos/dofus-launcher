@@ -31,7 +31,8 @@ const settings: LauncherSettings = {
   closeOnLaunch: 'minimize',
   speedLimitBps: null,
   maxConcurrency: 8,
-  language: 'fr'
+  language: 'fr',
+  avatars: { '1001': '16-0' }
 };
 
 const state: AppState = {
@@ -280,6 +281,13 @@ const handlers: Record<string, (args: Record<string, any>) => unknown | Promise<
     account(accountId).active = !!active;
     emit('state-changed', null);
   },
+  account_set_avatar: ({ accountId, avatar }) => {
+    const avatars = { ...(settings.avatars ?? {}) };
+    if (avatar) avatars[String(accountId)] = String(avatar);
+    else delete avatars[String(accountId)];
+    settings.avatars = avatars;
+    emit('state-changed', null);
+  },
   account_logout: async ({ accountId }) => {
     await sleep(300);
     const wasMain = account(accountId).isMain;
@@ -326,7 +334,7 @@ const handlers: Record<string, (args: Record<string, any>) => unknown | Promise<
   },
   settings_get: () => ({ ...settings }),
   settings_set: ({ settings: s }) => {
-    Object.assign(settings, s);
+    Object.assign(settings, s, { avatars: settings.avatars });
     state.release.installDir = settings.installDir;
     emit('state-changed', null);
     return { ...settings };

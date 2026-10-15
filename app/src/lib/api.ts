@@ -47,6 +47,8 @@ export interface LauncherSettings {
   speedLimitBps: number | null;
   maxConcurrency: number;
   language: Lang;
+  /** Chosen portrait per account id: "<classId>-<0|1>". */
+  avatars?: Record<string, string>;
 }
 
 export interface ReleaseState {
@@ -215,6 +217,9 @@ export const api = {
   accountSetActive: (accountId: number, active: boolean) =>
     call<void>('account_set_active', { accountId, active }),
   accountLogout: (accountId: number) => call<void>('account_logout', { accountId }),
+  /** `avatar` = "<classId>-<0|1>", null resets to the default egg. */
+  accountSetAvatar: (accountId: number, avatar: string | null) =>
+    call<void>('account_set_avatar', { accountId, avatar }),
 
   gameInstall: (installDir?: string) =>
     call<void>('game_install', installDir ? { installDir } : {}),

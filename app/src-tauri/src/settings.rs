@@ -1,6 +1,7 @@
 //! Launcher settings, persisted as plain JSON in `%APPDATA%\dofus-launcher\settings.json`.
 use dofus_core::paths;
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
@@ -24,6 +25,8 @@ pub struct LauncherSettings {
     pub speed_limit_bps: Option<u64>,
     pub max_concurrency: usize,
     pub language: String,
+    /// Portrait chosen per account: account id -> "<classId>-<0|1>" (male/female).
+    pub avatars: BTreeMap<String, String>,
 }
 
 impl Default for LauncherSettings {
@@ -34,6 +37,7 @@ impl Default for LauncherSettings {
             speed_limit_bps: None,
             max_concurrency: 6,
             language: "fr".into(),
+            avatars: BTreeMap::new(),
         }
     }
 }
@@ -64,6 +68,7 @@ impl LauncherSettings {
         if !matches!(self.language.as_str(), "fr" | "en" | "es" | "de" | "pt") {
             self.language = "fr".into();
         }
+        self.avatars.retain(|_, v| is_valid_avatar(v));
         if self.install_dir.trim().is_empty() {
             self.install_dir = LauncherSettings::default().install_dir;
         }
@@ -73,4 +78,10 @@ impl LauncherSettings {
     pub fn install_dir(&self) -> PathBuf {
         PathBuf::from(&self.install_dir)
     }
+}
+
+/// Dofus 3 breed ids (19 is unused) and sex 0/1, e.g. `"16-0"` = male Eliotrope.
+pub fn is_valid_avatar(v: &str) -> bool {
+    let Some((class, sex)) = v.split_once('-') else { return false };
+    matches!(class.parse::<u8>(), Ok(1..=18 | 20)) && matches!(sex, "0" | "1")
 }

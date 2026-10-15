@@ -35,9 +35,15 @@ export const symbol = (classId: number) => `/dofus/symbols/${classId}.webp`;
 /** Class head portrait (54x56); `female` picks the second variant. */
 export const head = (classId: number, female = false) => `/dofus/heads/${classId}${female ? 1 : 0}.webp`;
 
-/** Stable portrait for an account, derived from its id. */
-export function accountHead(accountId: number): string {
-  const n = Math.abs(Math.trunc(accountId));
-  const c = CLASSES[n % CLASSES.length];
-  return head(c.id, Math.floor(n / CLASSES.length) % 2 === 1);
+/** Parse a stored "<classId>-<0|1>" portrait. */
+export function parseAvatar(v: string | undefined): { classId: number; female: boolean } | null {
+  const m = /^(\d+)-([01])$/.exec(v ?? '');
+  if (!m || !CLASSES.some((c) => c.id === +m[1])) return null;
+  return { classId: +m[1], female: m[2] === '1' };
+}
+
+/** Portrait of an account: the class chosen by the user, or the Dofus egg when none is set. */
+export function accountAvatar(accountId: number, avatars: Record<string, string> | undefined): string {
+  const a = parseAvatar(avatars?.[String(accountId)]);
+  return a ? head(a.classId, a.female) : asset.egg;
 }

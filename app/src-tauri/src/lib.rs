@@ -121,8 +121,31 @@ fn account_set_active(handle: AppHandle, app: State<'_, App>, account_id: i64, a
 }
 
 #[tauri::command]
+fn account_set_avatar(handle: AppHandle, app: State<'_, App>, account_id: i64, avatar: Option<String>) -> CmdResult<()> {
+    let mut s = app.settings();
+    match avatar {
+        Some(v) if settings::is_valid_avatar(&v) => {
+            s.avatars.insert(account_id.to_string(), v);
+        }
+        Some(_) => return Err("Portrait invalide".into()),
+        None => {
+            s.avatars.remove(&account_id.to_string());
+        }
+    }
+    s.save().map_err(ui_err)?;
+    *app.settings.lock().unwrap() = s;
+    emit_state(&handle);
+    Ok(())
+}
+
+#[tauri::command]
 async fn account_logout(handle: AppHandle, app: State<'_, App>, account_id: i64) -> CmdResult<()> {
     app.auth.logout(account_id).await.map_err(ui_err)?;
+    let mut s = app.settings();
+    if s.avatars.remove(&account_id.to_string()).is_some() {
+        let _ = s.save();
+        *app.settings.lock().unwrap() = s;
+    }
     emit_state(&handle);
     Ok(())
 }
@@ -319,7 +342,9 @@ fn settings_set(handle: AppHandle, app: State<'_, App>, settings: LauncherSettin
     if app.task.lock().unwrap().is_some() && settings.install_dir != app.settings().install_dir {
         return Err("Impossible de changer de dossier pendant une mise à jour".into());
     }
-    let s = settings.sanitized();
+    let mut s = settings.sanitized();
+    // Portraits are owned by `account_set_avatar`; the settings form never edits them.
+    s.avatars = app.settings().avatars;
     s.save().map_err(ui_err)?;
     app.auth.set_language(&s.language);
     *app.settings.lock().unwrap() = s.clone();
@@ -468,6 +493,7 @@ pub fn run() {
             shield_resend,
             account_set_main,
             account_set_active,
+            account_set_avatar,
             account_logout,
             game_install,
             game_update,

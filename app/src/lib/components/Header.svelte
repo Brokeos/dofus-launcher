@@ -2,7 +2,7 @@
   import { api } from '$lib/api';
   import { accountName } from '$lib/format';
   import { store } from '$lib/store.svelte';
-  import { accountHead, asset } from '$lib/sprites';
+  import { accountAvatar, asset } from '$lib/sprites';
 
   interface Props {
     onsettings: () => void;
@@ -72,7 +72,7 @@
                   onchange={(e) =>
                     store.run(() => api.accountSetActive(a.id, e.currentTarget.checked))}
                 />
-                <img class="avatar" src={accountHead(a.id)} alt="" width="22" height="22" />
+                <img class="avatar" src={accountAvatar(a.id, store.state?.settings.avatars)} alt="" width="22" height="22" />
                 <span class="name">{accountName(a)}</span>
               </label>
               {#if a.isMain}
